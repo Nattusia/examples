@@ -1,0 +1,38 @@
+/*body {
+  overflow: auto;
+}*/
+
+body.page-calendar-hero-integration-calendar-hero-report {
+  overflow-x: auto;
+}
+
+nav.pager {
+  font-size: 16px;
+  margin-top: 40px;
+}
+.form-item-from, .form-item-to {
+  float: left;
+  margin-right: 30px;
+}
+
+.js-form-type-select {
+  width: 400px;
+  float: left;
+  margin-right: 40px;
+}
+
+#edit-period, #edit-actions {
+  display: block;
+  clear: both;
+}
+
+#edit-period .fielset-wrapper {
+  display: inline;
+}
+
+#edit-period legend {
+  width: 80px;
+}
+/*#export-report-table td, #export-report-table th {
+  padding: 5px;
+}*/

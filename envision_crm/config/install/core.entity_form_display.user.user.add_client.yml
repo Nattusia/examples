@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.add_client
+    - field.field.user.user.field_backup_coach
+    - field.field.user.user.field_company_division
+    - field.field.user.user.field_first_name
+    - field.field.user.user.field_last_name
+    - field.field.user.user.field_licensee_group
+    - field.field.user.user.field_primary_coach
+  module:
+    - shs
+    - user
+    - envision_crm
+  enforced:
+    module:
+      - envision_crm
+_core:
+  default_config_hash: E42MMylEGIUkKXDvfdNmBqh440DonjMGhsHe7b5vCO8
+id: user.user.add_client
+targetEntityType: user
+bundle: user
+mode: add_client
+content:
+  account:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_company_division:
+    type: options_shs
+    weight: 4
+    region: content
+    settings:
+      force_deepest: true
+      create_new_items: false
+      create_new_levels: false
+      display_node_count: false
+    third_party_settings: {  }
+  field_first_name:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_last_name:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  commerce_remote_id: true
+  contact: true
+  field_backup_coach: true
+  field_created_by: true
+  field_licensee_group: true
+  field_primary_coach: true
+  field_xai_id: true
+  field_xai_page: true
+  language: true
+  private_messages: true
+  timezone: true
+  user_picture: true

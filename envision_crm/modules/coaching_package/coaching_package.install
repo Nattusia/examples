@@ -1,0 +1,31 @@
+<?php
+use Drupal\Core\Config\FileStorage;
+
+function coaching_package_update_8001(&$sandbox) {
+  $config_path = drupal_get_path('module', 'coaching_package') . '/config/install';
+  $source = new FileStorage($config_path);
+  $config_storage = \Drupal::service('config.storage');
+  $config_storage->write('system.action.coaching_package_assign_multiple', $source->read('system.action.coaching_package_assign_multiple'));
+  $config_storage->write('views.view.my_clients', $source->read('views.view.my_clients'));
+}
+
+function coaching_package_update_8002(&$sandbox) {
+  $config_path = drupal_get_path('module', 'coaching_package') . '/config/install';
+  $source = new FileStorage($config_path);
+  $config_storage = \Drupal::service('config.storage');
+  \Drupal::entityManager()->getStorage('field_storage_config')
+    ->create($source->read('field.storage.user.field_coaching_package'))
+    ->save();
+
+  // Obtain the storage manager for field instances
+  // Create a new field instance from the yaml configuration and save
+  \Drupal::entityManager()->getStorage('field_config')
+    ->create($source->read('field.field.user.user.field_coaching_package'))
+    ->save();
+
+  //$config_storage->write('field.storage.user.field_coaching_package', $source->read('field.storage.user.field_coaching_package'));
+  //$config_storage->write('field.field.user.user.field_coaching_package', $source->read('field.field.user.user.field_coaching_package'));
+  $config_storage->write('system.action.coaching_package_assign_multiple', $source->read('system.action.coaching_package_assign_multiple'));
+  $config_storage->write('views.view.my_clients', $source->read('views.view.my_clients'));
+  $config_storage->write('views.view.my_coaching_packages', $source->read('views.view.my_coaching_packages'));
+}

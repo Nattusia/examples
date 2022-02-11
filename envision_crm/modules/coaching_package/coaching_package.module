@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Provides a coaching package entity type.
+ */
+
+use Drupal\Core\Render\Element;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function coaching_package_theme() {
+  return [
+    'coaching_package' => [
+      'render element' => 'elements',
+    ],
+    'coaching_package_counting_hours_block' => [
+      'base_hook' => 'coaching_package_counting_hours_block',
+      'variables' => [
+        'content' => NULL
+      ],
+    ],
+
+    'coaching_package_hours_summary' => [
+      'base_hook' => 'coaching_package_hours_summary',
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for coaching package templates.
+ *
+ * Default template: coaching-package.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the coaching package information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_coaching_package(array &$variables) {
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+function coaching_package_form_alter(&$form, $form_state, $form_id) {
+
+  if (preg_match('/views_form_my_clients_default/', $form_id)) {
+    $route_match = \Drupal::routeMatch();
+    if ($route_match->getRouteName() == 'envision_crm.my_clients') {
+      $coach = $route_match->getParameter('coach');
+      $form_state->set('coach', $coach);
+    }
+    array_unshift($form['#submit'], 'coaching_package_prepare_assign_multiple');
+  }
+  if (preg_match('/views_form_user_admin_people_page_1/', $form_id)) {
+    $form_state->set('coach', 1);
+    array_unshift($form['#submit'], 'coaching_package_prepare_assign_multiple');
+  }
+}
+
+function coaching_package_prepare_assign_multiple(&$form, $form_state) {
+
+  $tempstore = \Drupal::service('tempstore.private')->get('coaching_package_assign_multiple');
+  $form_id = $form_state->getValue('form_id');
+  // if (preg_match('/views_form_my_clients_default/', $form_id)) {
+  //   $tempstore->set('type', 'clients');
+  // }
+  // else {
+  //   $tempstore->set('type', 'coaches');
+  // }
+
+  if ($form_state->getValue('action') == 'coaching_package_assign_multiple') {
+
+    $tempstore->set('coach', $form_state->get('coach'));
+  }
+}
+
+function coaching_package_is_active($package, $date = '') {
+  $active = FALSE;
+  $check_date = empty($date) ? time() : $date;
+  if ($package->hasField('field_start_end')) {
+    $start_end = $package->field_start_end->getValue();
+    if ($start_end) {
+
+      $start = strtotime($start_end[0]['value']);
+      $end = strtotime($start_end[0]['end_value']);
+      $active = (($start <= $check_date) && ($end >= $check_date));
+    }
+  }
+
+  return $active;
+}
+
+function coaching_package_coaching_package_insert($entity) {
+
+  $owner = $entity->getOwner();
+
+  if (($owner) && ($owner->hasRole('egl_consultant'))) {
+    $packages = $owner->field_coaching_package->getValue();
+    if (!$packages) {
+      $packages = [];
+    }
+    array_push($packages, ['target_id' => $entity->id()]);
+
+    $owner->field_coaching_package->setValue($packages);
+    $owner->save();
+
+    $route_name = 'coaching_package.my_coaching_packages';
+    $params['coach'] = $owner->id();
+    $url = Url::fromRoute($route_name, $params);
+    $response = new RedirectResponse($url->toString());
+    $response->send();
+
+  }
+}

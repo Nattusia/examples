@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_company_division
+    - taxonomy.vocabulary.companies_divisions
+  module:
+    - user
+    - envision_crm
+  enforced:
+    module:
+      - envision_crm
+id: user.user.field_company_division
+field_name: field_company_division
+entity_type: user
+bundle: user
+label: Company/division
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      companies_divisions: companies_divisions
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

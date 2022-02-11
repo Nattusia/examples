@@ -1,0 +1,4 @@
+administer calendar_hero_integration configuration:
+  title: 'Administer calendar_hero_integration configuration'
+  description: 'Optional description.'
+  restrict access: true

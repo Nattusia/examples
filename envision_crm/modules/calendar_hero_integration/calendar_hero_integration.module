@@ -1,0 +1,315 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Calendar Hero Integration module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\calendar_hero_integration\Common;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_theme().
+ */
+function calendar_hero_integration_theme() {
+  return [
+    'calendar_hero_integration_reports' => [
+      'variables' => [
+                       'links' => NULL,
+                     ],
+      'template' => 'block--calendar-hero-integration-reports',
+    ],
+  ];
+}
+/**
+ * Sends mail to a given user.
+ *
+ * @param string $to
+ *   User's email.
+ * @param string $message
+ *   The message. If empty, then register no approval required message
+ *     will be sent.
+ * @param string $subject
+ *   The subject. If emty, then register no approval required is used.
+ */
+function calendar_hero_integration_send_mail($to, $message = '', $subject = '', $key = '', $batch = FALSE) {
+    // Send mail to user.
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $module = 'calendar_hero_integration';
+    $key = empty($key) ? 'invitaion_link' : $key;
+
+    $params['message'] = $message;
+    $params['subject'] = empty($subject) ? t('You have been invited') : $subject;
+    $send = TRUE;
+    $result = $mailManager->mail($module, $key, $to, 'en', $params, NULL, $send);
+
+    if ($result['result'] !== TRUE) {
+      if ($batch) {
+        return FALSE;
+      }
+      \Drupal::messenger()->addError(t('There was a problem sending your message and it was not sent.'));
+    }
+    else {
+      if ($batch) {
+        return TRUE;
+      }
+      $success = t('Invitation message has been sent to the user');
+      \Drupal::messenger()->addStatus($success);
+    }
+  }
+
+/**
+ * Implements hook_mail().
+ */
+function calendar_hero_integration_mail($key, &$message, $params) {
+
+  switch ($key) {
+    case 'invitaion_link':
+    case 'scheduling_link':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['message'];
+      break;
+
+  }
+}
+
+/**
+ * Creates and sets token to access the calendar page.
+ *
+ * @param int $host
+ *   The host uid.
+ * @param int $user
+ *   The guest uid.
+ * @param string $template
+ *   The path to template which is set in x.ai account.
+ *
+ * @return string
+ *   The token with information encrypted.
+ */
+function calendar_hero_integration_set_token($host, $user, $template = '') {
+
+  $string = $host . '-' . $user . '-' . $template . '-' . time();
+  $token = hash("sha256", $string);
+  $fields = [
+    'host_uid' => $host,
+    'guest_uid' => $user,
+    'expired' => time() + (86400 * 7),
+    'token' => $token,
+  ];
+  $connection = \Drupal::database();
+  $query = $connection->insert('invitation_tokens')->fields($fields)->execute();
+
+  return $token;
+}
+
+/**
+ * Gets guest and host uids from the given goken.
+ *
+ * @param strign $token
+ *   The token.
+ *
+ * @return array
+ *   The array with uids, or empty array if token did not find or has been expired.
+ */
+function calendar_hero_integration_get_uid_by_token($token) {
+  $uids = [];
+
+  $current_time = time();
+  $connection = \Drupal::database();
+  $query = $connection->select('invitation_tokens');
+  $query->condition('token', $token);
+  $query->condition('expired', $current_time, '>');
+  $query->fields('invitation_tokens', ['host_uid', 'guest_uid']);
+
+  $result = $query->execute()->fetchAll();
+  if ($result) {
+    $uids['host_uid'] = $result[0]->host_uid;
+    $uids['guest_uid'] = $result[0]->guest_uid;
+  }
+
+  return $uids;
+}
+
+function calendar_hero_integration_get_site_roles() {
+
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+  $options = [];
+  foreach ($roles as $role) {
+    if ($role->id() !== 'anonymous') {
+      $options[$role->id()] = $role->label();
+    }
+  }
+
+  return $options;
+}
+
+function calendar_hero_integration_get_meeting_types($user) {
+  $common = new Common();
+  $meetings = $common->getMeetingTypes($user);
+  $options = [];
+  if ($meetings) {
+    foreach ($meetings as $m_key => $meeting) {
+      $options[$m_key] = $m_key;
+    }
+  }
+
+  return $options;
+}
+
+function calendar_hero_integration_form_alter(&$form, $form_state, $form_id) {
+
+  if (preg_match('/views_form_my_clients_default/', $form_id)) {
+    $route_match = \Drupal::routeMatch();
+    if ($route_match->getRouteName() == 'envision_crm.my_clients') {
+      $coach = $route_match->getParameter('coach');
+      $form_state->set('coach', $coach);
+    }
+    array_unshift($form['#submit'], 'calendar_hero_integration_bulk_invitation_link');
+  }
+}
+
+function calendar_hero_integration_bulk_invitation_link(&$form, $form_state) {
+
+  if ($form_state->getValue('action') == 'bulk_invitation_link') {
+    $tempstore = \Drupal::service('tempstore.private');
+    $tempstore->get('chero_integration_invite_multiple')->set('coach', $form_state->get('coach'));
+    $tempstore->get('chero_integration_invite_multiple')->set('invite_multiple', $form_state->get('coach'));
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ *   View object.
+ * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
+ *   Query object.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function calendar_hero_integration_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if (($view->id() === 'opigno_calendar') || ($view->id() == 'opigno_calendar_copy')) {
+    $current_user = \Drupal::currentUser()->id();
+    $table_mapping = \Drupal::entityTypeManager()->getStorage('opigno_calendar_event')->getTableMapping();
+    $table = $table_mapping->getFieldTableName('field_calendar_event_members');
+
+    $definition = [
+      'table' => $table,
+      'field' => 'entity_id',
+      'left_table' => 'opigno_calendar_event_field_data',
+      'left_field' => 'id',
+    ];
+    $join = Drupal::service('plugin.manager.views.join')
+      ->createInstance('standard', $definition);
+    $query->addRelationship($table, $join, $table);
+    $common = new Common();
+    $get_query = \Drupal::request()->query->all();
+    $users_arr = $common->checkCalendarPage($get_query);
+
+    $condition_set = FALSE;
+    if (isset($users_arr['guest_uid'])) {
+      foreach ($query->where as $index => $where) {
+        foreach($where['conditions'] as $number => $condition) {
+          if ($condition['field'] == $table . ' . field_calendar_event_members_target_id') {
+            $query->where[$index]['conditions'][$number]['value'] = $users_arr['guest_uid'];
+            $condition_set = TRUE;
+          }
+        }
+      }
+
+    if (!$condition_set) {
+          $query->where[] = [
+            'conditions' => [
+              [
+                'field' => $table . ' . field_calendar_event_members_target_id',
+                'value' => $users_arr['guest_uid'],
+                'operator' => '=',
+              ],
+            ],
+            'type' => 'AND',
+          ];
+      }
+
+    }
+  }
+}
+
+function calendar_hero_integration_preprocess_views_view_field(&$vars) {
+
+  if ($vars['view']->storage->id() == 'opigno_calendar_copy') {
+    //ksm($vars['field']->options['id']);
+    $token = \Drupal::request()->query->get('token');
+    if ($vars['field']->options['id'] == 'nothing') {
+      $vals = explode('|', $vars['field']->last_render);
+      if ((!empty($vals[0])) && (!empty($vals[1]))) {
+        $params['template'] = $vals[0];
+        $options['query'] = [
+          'token' => $token,
+          'reschedule' => trim($vals[1]),
+        ];
+        $edit_url = Url::fromRoute('calendar_hero_integration.link_calendar', $params, $options);
+        $edit_link = Link::fromTextAndUrl('Reschedule', $edit_url);
+
+        $vars['output'] = $edit_link->toRenderable();
+
+      }
+      else {
+        $vars['output'] = '';
+      }
+      $vars['field']->last_render = $vars['output'];
+
+    }
+  }
+  $viewid = $vars['view']->storage->id();
+  if (preg_match('/opigno_calendar/', $viewid)) {
+    if ($vars['field']->options['id'] == 'nothing_1') {
+      $params = [
+        'opigno_calendar_event' => $vars['field']->last_render,
+      ];
+      $cancel_options['query']['token'] = $token;
+      $cancel_url = Url::fromRoute('calendar_hero_integration.cancel_event', $params, $cancel_options);
+      $cancel_link = Link::fromTextAndUrl('Cancel', $cancel_url);
+
+      $vars['output'] = $cancel_link->toRenderable();
+      $vars['field']->last_render = $vars['output'];
+    }
+  }
+}
+
+function calendar_hero_integration_preprocess_calendar_pager(&$vars) {
+
+  $route_match = \Drupal::routeMatch();
+  $rname = $route_match->getRouteName();
+
+  if ($rname == 'calendar_hero_integration.confirm_schedule') {
+    $query = \Drupal::request()->query->all();
+    if(!empty($query['arg'])) {
+      $curDate = \DateTime::createFromFormat('Ym', $query['arg']);
+      $curDate1 = \DateTime::createFromFormat('Ym', $query['arg']);
+    }
+    else {
+      $curDate = new \DateTime();
+      $curDate1 = new \DateTime();
+    }
+
+    $curDate->modify('+1 month');
+    $curDate1->modify('-1 month');
+    $query_prev = $query_next = $query;
+    $query_prev['arg'] = $curDate1->format('Ym');
+    $query_next['arg'] = $curDate->format('Ym');
+    $vars['items']['previous']['url'] =
+      Url::fromRoute('calendar_hero_integration.confirm_schedule', [], ['query' =>$query_prev]);
+    $vars['items']['next']['url'] =
+      Url::fromRoute('calendar_hero_integration.confirm_schedule', [], ['query' =>$query_next]);
+  }
+
+}

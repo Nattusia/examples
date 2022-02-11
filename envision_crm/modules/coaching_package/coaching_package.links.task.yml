@@ -1,0 +1,30 @@
+entity.coaching_package.settings:
+  title: Settings
+  route_name: entity.coaching_package.settings
+  base_route: entity.coaching_package.settings
+entity.coaching_package.view:
+  title: View
+  route_name: entity.coaching_package.canonical
+  base_route: entity.coaching_package.canonical
+entity.coaching_package.edit_form:
+  title: Edit
+  route_name: entity.coaching_package.edit_form
+  base_route: entity.coaching_package.canonical
+entity.coaching_package.delete_form:
+  title: Delete
+  route_name: entity.coaching_package.delete_form
+  base_route: entity.coaching_package.canonical
+  weight: 10
+entity.coaching_package.collection:
+  title: Coaching Package
+  route_name: entity.coaching_package.collection
+  base_route: system.admin_content
+  weight: 10
+coaching_package.coach.packages:
+  route_name: coaching_package.my_coaching_packages
+  title: 'My coaching packages'
+  base_route: envision_crm.coach_dashboard
+coaching_package.add_package:
+  route_name: coaching_package.add_package
+  title: 'Create coaching package'
+  base_route: envision_crm.coach_dashboard

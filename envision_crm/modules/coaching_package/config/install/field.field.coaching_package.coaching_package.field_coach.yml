@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.coaching_package.field_coach
+  module:
+    - coaching_package
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package.coaching_package.field_coach
+field_name: field_coach
+entity_type: coaching_package
+bundle: coaching_package
+label: Coach
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: true
+    filter:
+      type: role
+      role:
+        egl_consultant: egl_consultant
+        collaborative_features: '0'
+        statistics_reader: '0'
+        user_manager: '0'
+        content_manager: '0'
+        administrator: '0'
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,56 @@
+envision_crm.create_client:
+  path: '/coach/{coach}/add-client'
+  defaults:
+    _title: 'Create a new client'
+    #_controller: 'Drupal\envision_crm\Controller\EnvisionCrmController::addClient'
+    _entity_form: 'user.add_client'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+envision_crm.edit_client:
+  path: 'coach/{coach}/edit-client/{user}'
+  defaults:
+    _title: "Edit Client"
+    _entity_form: 'user.add_client'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccesstoClient'
+envision_crm.upload_users:
+  path: '/coach/{coach}/upload-users'
+  defaults:
+    _title: 'Upload users from a source file'
+    _form: 'Drupal\envision_crm\Form\UploadUsersForm'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+envision_crm.my_clients:
+  path: '/coach/{coach}/my-clients'
+  defaults:
+    _title: 'My Clients'
+    _controller: 'Drupal\envision_crm\Controller\EnvisionCrmController::myClients'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+envision_crm.coach_to_user.assign_multiple:
+  path: '/coach-assign-multiple'
+  defaults:
+    _form: 'Drupal\envision_crm\Form\CoachToMultipleClientsForm'
+    _title: "Assign the coach to multiple users"
+  requirements:
+    _permission: 'administer users'
+envision_crm.coach_autocomplete:
+  path: '/coach-autocomplete'
+  defaults:
+    _controller: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAutocomplete'
+  requirements:
+    _permission: 'administer users'
+envision_crm.admin_upload_users:
+  path: '/admin/people/upload-users'
+  defaults:
+    _title: 'Upload users from a source file'
+    _form: 'Drupal\envision_crm\Form\UploadUsersForm'
+  requirements:
+    _permission: 'administer users'
+envision_crm.coach_dashboard:
+  path: '/coach/{coach}/dashboard'
+  defaults:
+    _title: 'Dashboard'
+    _controller: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachDashboard'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'

@@ -1,0 +1,5 @@
+services:
+  calendar_hero_integration.install.route_subscriber:
+    class: Drupal\calendar_hero_integration\EventSubscriber\DashboardRouteSubscriber
+    tags:
+      - { name: event_subscriber }

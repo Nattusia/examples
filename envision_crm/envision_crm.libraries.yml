@@ -1,0 +1,5 @@
+# Custom module library for general purposes.
+envision_crm:
+  css:
+    theme:
+      css/envision-crm.css: {}

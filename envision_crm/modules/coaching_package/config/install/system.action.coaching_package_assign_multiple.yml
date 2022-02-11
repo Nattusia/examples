@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+    - coaching_package
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package_assign_multiple
+label: 'Assign the coaching package to the selected users'
+type: user
+plugin: coaching_package_assign_multiple
+configuration: {  }

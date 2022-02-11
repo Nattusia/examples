@@ -1,0 +1,4 @@
+administer envision_crm:
+  title: 'Administer envision_crm'
+  description: ''
+  restrict access: true

@@ -1,0 +1,22 @@
+envision_crm.coach_dashboard:
+  route_name: envision_crm.coach_dashboard
+  title: 'Dashboard'
+  base_route: envision_crm.coach_dashboard
+envision_crm.my_clients:
+  route_name: envision_crm.my_clients
+  title: 'My clients'
+  base_route: envision_crm.coach_dashboard
+envision_crm.add_client:
+  route_name: envision_crm.create_client
+  title: 'Add new client'
+  base_route: envision_crm.coach_dashboard
+envision_crm.upload_users:
+  route_name: envision_crm.upload_users
+  title: 'Upload users'
+  base_route: envision_crm.coach_dashboard
+envision_crm.admin_upload_users:
+  route_name: envision_crm.admin_upload_users
+  title: 'Upload users'
+  base_route: entity.user.collection
+
+

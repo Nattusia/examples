@@ -1,0 +1,53 @@
+<?php
+
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Envision CRM module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function envision_crm_install() {
+  //\Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function envision_crm_uninstall() {
+  //\Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function envision_crm_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $value = mt_rand(0, 100);
+    $requirements['envision_crm_status'] = [
+      'title' => t('Envision CRM status'),
+      'value' => t('Envision CRM value: @value', ['@value' => $value]),
+      'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}
+
+function envision_crm_update_8001(&$sandbox) {
+  $connection = \Drupal::database();
+  $qeury = $connection->schema()->dropTable('envision_crm_example');
+}
+
+function envision_crm_update_8002(&$sandbox) {
+  $config_path = drupal_get_path('module', 'envision_crm') . '/config/install';
+  $source = new FileStorage($config_path);
+  $config_storage = \Drupal::service('config.storage');
+  $config_storage->write('system.action.envision_crm.coach_to_user.assign_multiple', $source->read('system.action.envision_crm.coach_to_user.assign_multiple'));
+}
+

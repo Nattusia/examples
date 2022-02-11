@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+    - envision_crm
+  enforced:
+    - envision_crm
+name: 'Licensee Groups'
+vid: licensee_groups
+description: ''
+weight: 0

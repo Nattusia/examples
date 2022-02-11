@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_primary_coach
+    - field.storage.user.field_backup_coach
+  module:
+    - user
+    - envision_crm
+  enforced:
+    module:
+      - envision_crm
+id: coach_to_user_assign_multiple
+label: 'Assign the coach to the selected users'
+type: user
+plugin: coach_to_user_assign_multiple
+configuration: {  }

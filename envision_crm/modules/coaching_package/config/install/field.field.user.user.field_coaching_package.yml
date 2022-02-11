@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_coaching_package
+  module:
+    - user
+  enforced:
+    module:
+      - coaching_package
+id: user.user.field_coaching_package
+field_name: field_coaching_package
+entity_type: user
+bundle: user
+label: 'Coaching Package'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:coaching_package'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

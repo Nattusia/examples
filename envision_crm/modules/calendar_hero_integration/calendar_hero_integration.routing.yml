@@ -1,0 +1,154 @@
+# calendar_hero_integration.example:
+#   path: '/calendar-hero-integration/example'
+#   defaults:
+#     _title: 'Example'
+#     _controller: '\Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::build'
+#   requirements:
+#     _permission: 'access content'
+
+# calendar_hero_integration.scheduling:
+#   path: '/example'
+#   defaults:
+#     _title: 'Example'
+#     _form: '\Drupal\calendar_hero_integration\Form\BaseSchedulingForm'
+#   requirements:
+#     _permission: 'access content'
+
+calendar_hero_integration.settings_form:
+  path: '/admin/config/system/calendar-hero-integration'
+  defaults:
+    _title: 'Calendar Hero settings'
+    _form: 'Drupal\calendar_hero_integration\Form\SettingsForm'
+  requirements:
+    _permission: 'administer calendar_hero_integration configuration'
+calendar_hero_integration.webhook_catch:
+  methods: [POST]
+  path: '/coach/{coach}/webhook/{webhook}'
+  defaults:
+    _title: 'Catching webhooks'
+    _controller: '\Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::catch'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.get_month:
+  path: 'month/{coach}/{month}/{template}'
+  defaults:
+    _controller: '\Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::getMonth'
+    _format: json
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.client_autocomplete:
+  path: '/ajax/{coach}/clients-autocomplete'
+  defaults:
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::clientsAutocomplete'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+calendar_hero_integration.link_calendar:
+  path: '/schedule/action/{template}'
+  defaults:
+    _title: 'Schedule a meeting'
+    #_controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::checkCalendarPage'
+    _form: 'Drupal\calendar_hero_integration\Form\ClientSchedulingForm'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.confirm_schedule:
+  path: '/schedule/confirmation'
+  defaults:
+    _title: 'Confirm Your Schedule'
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::calendarConfirmation'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.prepare_link_form:
+  path: '/coach/{coach}/link'
+  defaults:
+    _title: 'Form'
+    _form: 'Drupal\calendar_hero_integration\Form\PrepareLinkForm'
+  requirements:
+    _custom_access: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::prepareLinkAccess'
+calendar_hero_integration.multiple_invitation_form:
+  path: '/invitation-multiple'
+  defaults:
+    _title: "Send invitation link to multiple users"
+    _form: 'Drupal\calendar_hero_integration\Form\MultipleInvitationForm'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.coach_schedule:
+  path: '/coach/{coach}/schedule'
+  defaults:
+    _title: 'Schedule meeting'
+    _form: 'Drupal\calendar_hero_integration\Form\CoachSchedulingForm'
+  requirements:
+    _custom_access: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::prepareLinkAccess'
+calendar_hero_integration.batch_result:
+  path: '/schedule/multiple/{template}'
+  defaults:
+    _title: "Scheduling result"
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::batchResult'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.cancel_event:
+  path: '/cancel/event/{opigno_calendar_event}'
+  defaults:
+    _title: 'Confirm event cancel'
+    _form: 'Drupal\calendar_hero_integration\Form\CancelEventForm'
+  requirements:
+    _access: "TRUE"
+calendar_hero_integration.calendar_hero_import:
+  path: '/admin/ch/import'
+  defaults:
+    _title: 'Calendar Hero Meetings import'
+    _form: 'Drupal\calendar_hero_integration\Form\CalendarHeroImportForm'
+  requirements:
+    _permission: "administer users"
+calendar_hero_integration.calendar_hero_report_short:
+  path: '/admin/ch/report-short'
+  defaults:
+    _title: "Calendar Hero Meetings report"
+    #_form: 'Drupal\calendar_hero_integration\Form\CalendarHeroExportForm'
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::outputReport'
+  requirements:
+    _permission: "administer users"
+calendar_hero_integration.calendar_hero_report:
+  path: '/admin/ch/report'
+  defaults:
+    _title: "Calendar Hero Meetings report"
+    #_form: 'Drupal\calendar_hero_integration\Form\CalendarHeroExportForm'
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::outputReportAlternative'
+  requirements:
+    _permission: "administer users"
+calendar_hero_integration.time_report:
+  path: '/admin/ch/time'
+  defaults:
+    _title: "Calendar Hero Time Balance report"
+    #_form: 'Drupal\calendar_hero_integration\Form\CalendarHeroExportForm'
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::timeReport'
+  requirements:
+    _permission: "administer users"
+calendar_hero_integration.common_time_report:
+  path: '/admin/ch/time-common'
+  defaults:
+    _title: "Calendar Hero Time report"
+    #_form: 'Drupal\calendar_hero_integration\Form\CalendarHeroExportForm'
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::commonTimeReport'
+  requirements:
+    _permission: "administer users"
+# calendar_hero_integration.calendar_hero_coach_report:
+#   path: '/admin/ch/coach-report'
+#   defaults:
+#     _title: "Calendar Hero Coaches report"
+#     _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::coachReport'
+#   requirements:
+#     _permission: "administer users"
+calendar_hero_integration.calendar_hero_update_coaches:
+  path: '/admin/config/system/calendar-hero-integration/setup'
+  defaults:
+    _title: "Update Coaches Integration"
+    _form: 'Drupal\calendar_hero_integration\Form\UpdateAccountsForm'
+  requirements:
+    _permission: "administer users"
+calendar_hero_integration.personal_hours_report:
+  path: '/coach/{coach}/user/{user}/report'
+  defaults:
+    _title: "Personal client report"
+    _controller: 'Drupal\calendar_hero_integration\Controller\CalendarHeroIntegrationController::personalReport'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'

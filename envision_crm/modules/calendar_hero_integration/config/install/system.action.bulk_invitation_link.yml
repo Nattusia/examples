@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+    - calendar_hero_integration
+  enforced:
+    module:
+      - calendar_hero_integration
+id: bulk_invitation_link
+label: 'Send the invitation link to selected users'
+type: user
+plugin: bulk_invitation_link
+configuration: {  }

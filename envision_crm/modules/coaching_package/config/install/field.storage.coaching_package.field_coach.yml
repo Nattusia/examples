@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - coaching_package
+    - user
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package.field_coach
+field_name: field_coach
+entity_type: coaching_package
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

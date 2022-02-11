@@ -1,0 +1,9 @@
+{# egl_assessments/templates/block--envision-crm-manage.html.twig #}
+<div class="content-box">
+<p>
+{% for link in links %}
+<a href="{{ link.url }}" class="btn button primary">{{ link.title }}</a><br />
+<br />
+{% endfor %}
+</p>
+</div>

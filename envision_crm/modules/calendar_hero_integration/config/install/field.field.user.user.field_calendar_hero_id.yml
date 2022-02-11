@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_calendar_hero_id
+  module:
+    - user
+    - calendar_hero_integration
+  enforced:
+    module:
+      - calendar_hero_integration
+id: user.user.field_calendar_hero_id
+field_name: field_calendar_hero_id
+entity_type: user
+bundle: user
+label: 'Calendar Hero ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

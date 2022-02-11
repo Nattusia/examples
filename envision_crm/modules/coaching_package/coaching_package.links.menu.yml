@@ -1,0 +1,10 @@
+entity.coaching_package.settings:
+  title: Coaching Package
+  description: Configure a Coaching Package entity type
+  route_name:  entity.coaching_package.settings
+  parent: system.admin_structure
+entity.coaching_package.collection:
+  title: Coaching Packages
+  description: List of coaching packages
+  route_name: entity.coaching_package.collection
+  parent: system.admin_content

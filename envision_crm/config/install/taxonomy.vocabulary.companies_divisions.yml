@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+    - envision_crm
+  enforced:
+    - envision_crm
+name: 'Companies and divisions'
+vid: companies_divisions
+description: ''
+weight: 0

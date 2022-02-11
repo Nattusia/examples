@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.coaching_package.field_start_end
+  module:
+    - coaching_package
+    - datetime_range
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package.coaching_package.field_start_end
+field_name: field_start_end
+entity_type: coaching_package
+bundle: coaching_package
+label: Start/end
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

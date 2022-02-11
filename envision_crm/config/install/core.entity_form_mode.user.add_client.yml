@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+    - envision_crm
+  enforced:
+    module:
+     - envision_crm
+id: user.add_client
+label: 'Add client'
+targetEntityType: user
+cache: true

@@ -1,0 +1,28 @@
+calendar_hero_integration.prepare_link_form:
+  route_name: calendar_hero_integration.prepare_link_form
+  title: 'Send invitation'
+  base_route: envision_crm.coach_dashboard
+calendar_hero_integration.coach_schedule:
+  route_name: calendar_hero_integration.coach_schedule
+  title: 'Scheduling'
+  base_route: envision_crm.coach_dashboard
+calendar_hero_integration.import:
+  route_name: calendar_hero_integration.calendar_hero_import
+  title: "Import meetings data"
+  base_route: calendar_hero_integration.calendar_hero_import
+calendar_hero_integration.export:
+  route_name: calendar_hero_integration.calendar_hero_report
+  title: "Get report main"
+  base_route: calendar_hero_integration.calendar_hero_import
+calendar_hero_integration.export1:
+  route_name: calendar_hero_integration.calendar_hero_report_short
+  title: "Get report short"
+  base_route: calendar_hero_integration.calendar_hero_import
+calendar_hero_integration.time_report:
+  route_name: calendar_hero_integration.time_report
+  title: "Time report"
+  base_route: calendar_hero_integration.calendar_hero_import
+calendar_hero_integration.common_time_report:
+  route_name: calendar_hero_integration.common_time_report
+  title: "Time totals"
+  base_route: calendar_hero_integration.calendar_hero_import

@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.coaching_package.field_total_hours
+  module:
+    - coaching_package
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package.coaching_package.field_total_hours
+field_name: field_total_hours
+entity_type: coaching_package
+bundle: coaching_package
+label: 'Total hours'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

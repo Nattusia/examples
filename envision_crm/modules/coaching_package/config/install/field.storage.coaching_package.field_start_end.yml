@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - coaching_package
+    - datetime_range
+  enforced:
+    module:
+      - coaching_package
+id: coaching_package.field_start_end
+field_name: field_start_end
+entity_type: coaching_package
+type: daterange
+settings:
+  datetime_type: date
+module: datetime_range
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

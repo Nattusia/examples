@@ -1,0 +1,6 @@
+envision_crm.admin_upload_users:
+  title: Upload users
+  description: Upload users in bulk from excel file.
+  parent: entity.user.collection
+  route_name: envision_crm.admin_upload_users
+  weight: 10

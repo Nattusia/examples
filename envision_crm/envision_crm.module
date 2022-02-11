@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Envision CRM module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+//use Drupal\Core\Password\PasswordGeneratorInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_theme().
+ */
+function envision_crm_theme() {
+  return [
+    'envision_crm_manage_block' => [
+      'variables' => [
+                       'links' => NULL,
+                     ],
+      'template' => 'block--envision-crm-manage',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function envision_crm_entity_type_build(array &$entity_types) {
+  $entity_types['user']->setFormClass('add_client', 'Drupal\user\ProfileForm');
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function envision_crm_form_user_add_client_form_alter(&$form, $form_state, $form_id) {
+  //ksm(array_keys($form['account']));
+  $routeMatch = \Drupal::routeMatch();
+  $coach = $routeMatch->getParameter('coach');
+  $form['coach'] = [
+    '#type' => 'hidden',
+    '#value' => $coach,
+  ];
+  $form['account']['name']['#access'] = FALSE;
+
+  $form['#attached']['library'][] = 'envision_crm/envision_crm';
+  //$form['#validate'][] = 'envision_crm_add_user_data';
+  array_unshift($form['#validate'], 'envision_crm_add_user_data');
+}
+
+function envision_crm_form_user_form_alter(&$form, $form_state, $form_id) {
+   $form['#attached']['library'][] = 'envision_crm/envision_crm';
+}
+
+
+
+function envision_crm_add_user_data(&$form, $form_state) {
+  //ksm($form_state->getValues());
+  $values = $form_state->getValues();
+  $form_state->setValue('name', $values['mail']);
+  if (!empty($values['coach'])) {
+    $form_state->setValue(['field_primary_coach', 0, 'target_id'], $values['coach']);
+  }
+  $current_user = \Drupal::currentUser();
+  $form_state->setValue(['field_created_by', 0, 'target_id'], $current_user->id());
+  $form_state->setValue('roles', ['ldp_membership' => 'ldp_membership']);
+}
+
+function envision_crm_user_presave($entity) {
+
+  //@Todo. Do to use getUsername in D9.
+  //if (empty($entity->getUsername())) {
+  //  $entity->setUsername($entity->getEmail());
+ // }
+  if (empty($entity->getPassword())) {
+    //@Todo. Use this line in D9
+    //$password = \Drupal::service('password_generator')->generate(16);
+    $password = user_password(16);
+    $entity->setPassword($password);
+  }
+}
+
+// function envision_crm_entity_presave($entity) {
+//   ksm($entity->getEntityTypeId());
+// }
+
+function envision_crm_opigno_calendar_event_presave($entity) {
+//ksm(get_class_methods($entity));
+  //ksm(get_class_methods($entity->getDateItems()));
+  //ksm($entity->getDateItems()->getValue());
+}
+
+function envision_crm_views_query_alter($view, $query) {
+  if ($view->id() == 'my_clients') {
+    //$args = $view->args;
+    $query->where[0]['type'] = 'OR';
+  }
+}
+
+function envision_crm_clean_field_value($val_arr, $type = 'value') {
+  $vals = [];
+  foreach ($val_arr as $val) {
+    $vals[] = $val[$type];
+  }
+
+  return $vals;
+}
+
+function envision_crm_form_views_bulk_operations_configure_action_alter(&$form, $form_state, $form_id) {
+  foreach ($form['user'] as &$user_part) {
+    if (is_array($user_part)) {
+      foreach ($user_part as $key => &$user_field) {
+
+        if (!empty($user_field['widget']['#type'])) {
+          if ($user_field['widget']['#type'] == 'multiselect') {
+            $user_field['widget']['#key'] = $key;
+            array_unshift($user_field['widget']['#element_validate'], 'envision_crm_validate_bulk_operation');
+          }
+        }
+      }
+    }
+  }
+}
+
+function envision_crm_validate_bulk_operation(&$element, $form_state) {
+  $input = $form_state->getUserInput();
+  $element['#value'] = $input[$element['#key']];
+}

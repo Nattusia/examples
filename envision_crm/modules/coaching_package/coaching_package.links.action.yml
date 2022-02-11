@@ -1,0 +1,5 @@
+coaching_package.add_form:
+  route_name: entity.coaching_package.add_form
+  title: 'Add coaching package'
+  appears_on:
+    - entity.coaching_package.collection

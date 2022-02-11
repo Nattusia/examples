@@ -1,0 +1,42 @@
+calendar_hero_integration.calendar_hero_integration:
+  title: Calendar Hero
+  description: Configure calendar hero integration.
+  parent: system.admin_config_system
+  route_name: calendar_hero_integration.settings_form
+  weight: 10
+calendar_hero_integration.settings_form:
+  title: Calendar Hero
+  description: Configure calendar hero integration.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.settings_form
+  weight: 10
+calendar_hero_integration.import:
+  title: Import meetings
+  description: Import meetings from Calendar Hero.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.calendar_hero_import
+  weight: 11
+calendar_hero_integration.report:
+  title: Create report
+  description: Create report from Calendar Hero meetings.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.calendar_hero_report
+  weight: 12
+calendar_hero_integration.report1:
+  title: Create report Short
+  description: Create report from Calendar Hero meetings endpoint 2.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.calendar_hero_report_short
+  weight: 13
+calendar_hero_integration.time_report:
+  title: Time report
+  description: Get time report by meetings.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.time_report
+  weight: 14
+calendar_hero_integration.common_time_report:
+  title: Time totals
+  description: Get time totals for every coach/client pare.
+  parent: calendar_hero_integration.calendar_hero_integration
+  route_name: calendar_hero_integration.common_time_report
+  weight: 15

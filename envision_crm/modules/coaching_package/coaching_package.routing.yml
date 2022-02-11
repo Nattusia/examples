@@ -1,0 +1,37 @@
+entity.coaching_package.settings:
+  path: 'admin/structure/coaching-package'
+  defaults:
+    _form: '\Drupal\coaching_package\Form\CoachingPackageSettingsForm'
+    _title: 'Coaching Package'
+  requirements:
+    _permission: 'administer coaching package'
+coaching_package.assign_multiple:
+  path: '/package-assign-multiple'
+  defaults:
+    _form: '\Drupal\coaching_package\Form\CoachingPackageAssignMultipleForm'
+    _title: 'Assign Coaching Package'
+  requirements:
+    _custom_access: 'Drupal\coaching_package\Controller\CoachingPackageController::accessGeneral'
+coaching_package.my_coaching_packages:
+  path: '/coach/{coach}/packages'
+  defaults:
+    _title: 'My Coaching Packages'
+    _controller: 'Drupal\coaching_package\Controller\CoachingPackageController::myPackages'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+coaching_package.add_package:
+  path: 'coach/{coach}/add-package'
+  defaults:
+    _title: 'Add new coaching package'
+    _entity_form: 'coaching_package.add'
+  requirements:
+    _custom_access: 'Drupal\envision_crm\Controller\EnvisionCrmController::coachAccess'
+coaching_package.edit_package:
+  path: 'coach/{coach}/edit-package/{coaching_package}'
+  defaults:
+    _title: 'Edit coaching package'
+    _entity_form: 'coaching_package.edit'
+  requirements:
+    _custom_access: 'Drupal\coaching_package\Controller\CoachingPackageController::coachAccesstoPackage'
+
+

@@ -1,0 +1,5 @@
+administer coaching package:
+  title: 'Administer coaching package settings'
+  restrict access: true
+access coaching package overview:
+  title: 'Access coaching package overview page'

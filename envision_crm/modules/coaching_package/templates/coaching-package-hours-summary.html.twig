@@ -1,0 +1,8 @@
+{% set sing_plu = content.time == 1 ? 'hour' : 'hours' %}
+{% set upcoming = content.upcoming ? '('~ content.upcoming ~ ' upcoming)' : '' %}
+<div class = "summary-wrapper">
+  <div class = "package-info">
+    <div>Used {{ content.used }} from {{ content.total }} hours.</div>
+    <div>Remains {{ content.time }} {{ sing_plu }} {{ upcoming }}.</div>
+  </div>
+</div>

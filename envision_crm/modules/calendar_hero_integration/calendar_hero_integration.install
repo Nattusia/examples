@@ -1,0 +1,372 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Calendar Hero Integration module.
+ */
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Implements hook_install().
+ */
+function calendar_hero_integration_install() {
+  //\Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function calendar_hero_integration_uninstall() {
+  //\Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_schema().
+ */
+function calendar_hero_integration_schema() {
+
+  $schema['invitation_tokens'] = [
+    'fields' => [
+
+      'record_id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'host_uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+      'guest_uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+
+      'token' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'expired' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+
+    'primary key' => ['record_id'],
+  ];
+
+  $schema['calendar_hero_meetings'] = [
+    'fields' => [
+      'meeting_id' => [
+        'type' => 'varchar',
+        'length' => 35,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'coach' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'date_daterange_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'date_daterange_end_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'status' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+    ],
+
+    'primary key' => ['meeting_id', 'coach'],
+  ];
+
+  $schema['meetings_report_data'] = [
+    'fields' => [
+      'meeting_id' => [
+        'type' => 'varchar',
+        'length' => 35,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'coach' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'date_daterange_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'date_daterange_end_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'scheduled' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'updated' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'status' => [
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'client_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+
+      'client_email' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+
+      'duration' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ],
+
+      'title' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'type' => [
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+    ],
+    'primary key' => ['meeting_id', 'coach'],
+  ];
+
+
+
+  $schema['meetings_report_data_alter'] = [
+    'fields' => [
+      'meeting_id' => [
+        'type' => 'varchar',
+        'length' => 35,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'coach' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'date_daterange_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'date_daterange_end_value' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'scheduled' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'updated' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'client_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+
+      'client_email' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'duration' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ],
+
+      'description' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+    ],
+    'primary key' => ['coach', 'client_email', 'date_daterange_value'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function calendar_hero_integration_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $value = mt_rand(0, 100);
+    $requirements['calendar_hero_integration_status'] = [
+      'title' => t('Calendar Hero Integration status'),
+      'value' => t('Calendar Hero Integration value: @value', ['@value' => $value]),
+      'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}
+
+function calendar_hero_integration_update_8001(&$sandbox) {
+  $config_path = drupal_get_path('module', 'calendar_hero_integration') . '/config/install';
+  $source = new FileStorage($config_path);
+  $config_storage = \Drupal::service('config.storage');
+  $config_storage->write('system.action.bulk_invitation_link', $source->read('system.action.bulk_invitation_link'));
+}
+
+function calendar_hero_integration_update_8002(&$sandbox) {
+  $schema = calendar_hero_integration_schema();
+  $table = $schema['calendar_hero_meetings'];
+  \Drupal::database()->schema()->createTable('calendar_hero_meetings', $table);
+}
+
+function calendar_hero_integration_update_8003(&$sandbox) {
+  $status = [
+    'type' => 'varchar',
+    'length' => 20,
+    'not null' => FALSE,
+    'default' => NULL,
+  ];
+
+  $schema = \Drupal::database()->schema();
+  $schema->addField('calendar_hero_meetings', 'status', $status);
+}
+
+function calendar_hero_integration_update_8004(&$sandbox) {
+  $schema = calendar_hero_integration_schema();
+  $table = $schema['meetings_report_data'];
+  \Drupal::database()->schema()->createTable('meetings_report_data', $table);
+}
+
+function calendar_hero_integration_update_8005(&$sandbox) {
+  $status = [
+    'type' => 'varchar',
+    'length' => 100,
+    'not null' => FALSE,
+    'default' => NULL,
+  ];
+
+  $schema = \Drupal::database()->schema();
+  $schema->changeField('meetings_report_data', 'status', 'status', $status);
+}
+
+function calendar_hero_integration_update_8006(&$sandbox) {
+
+  $tField = [
+    'type' => 'varchar',
+    'length' => 20,
+    'not null' => FALSE,
+    'default' => NULL,
+  ];
+
+  $schema = \Drupal::database()->schema();
+  $schema->addField('meetings_report_data', 'scheduled', $tField);
+  $schema->addField('meetings_report_data', 'updated', $tField);
+}
+
+function calendar_hero_integration_update_8007(&$sandbox) {
+  $schema = calendar_hero_integration_schema();
+  $table = $schema['meetings_report_data_alter'];
+  \Drupal::database()->schema()->createTable('meetings_report_data_alter', $table);
+}
+
+function calendar_hero_integration_update_8008(&$sandbox) {
+  $schema = calendar_hero_integration_schema();
+  $table = $schema['meetings_report_data_alter'];
+  \Drupal::database()->schema()->dropPrimaryKey('meetings_report_data_alter');
+  \Drupal::database()->schema()->addPrimaryKey('meetings_report_data_alter', ['meeting_id', 'coach', 'client_email', 'date_daterange_value']);
+}
+
+function calendar_hero_integration_update_8009(&$sandbox) {
+  $schema = calendar_hero_integration_schema();
+  $table = $schema['meetings_report_data_alter'];
+  \Drupal::database()->schema()->dropPrimaryKey('meetings_report_data_alter');
+  \Drupal::database()->schema()->addPrimaryKey('meetings_report_data_alter', ['coach', 'client_email', 'date_daterange_value']);
+}

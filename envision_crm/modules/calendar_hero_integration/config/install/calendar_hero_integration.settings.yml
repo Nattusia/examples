@@ -1,0 +1,16 @@
+roles:
+  egl_consultant: egl_consultant
+  authenticated: 0
+  collaborative_features: 0
+  statistics_reader: 0
+  user_manager: 0
+  content_manager: 0
+  administrator: 0
+  student_manager: 0
+  premium: 0
+  ldp_membership: 0
+  corp_licensee_org_admin: 0
+  corp_licensee_div_admin: 0
+  corp_licensee_coach: 0
+  ind_licensee_mr: 0
+invite-message: "Dear customer.\r\nPlease visit this page and select our session time. \r\n[invitation_link]\r\n\r\nThank you.\r\nEnvision Global Team."

@@ -1,0 +1,6 @@
+# services:
+#   envision_crm.event_subscriber:
+#     class: Drupal\envision_crm\EventSubscriber\EnvisionCrmSubscriber
+#     arguments: ['@messenger']
+#     tags:
+#       - { name: event_subscriber }

@@ -1,0 +1,13 @@
+{% for coach_id, record in content %}
+  <div class = "package-wrapper">
+    <h3>The package with a coach {{ record.coach }}</h3>
+    <div class = "package-info">
+      <div>Start date - {{ record.start }} </div>
+      <div>End date - {{ record.end }} </div>
+      <div>Remains {{ record.time }} from {{ record.total }} hours.<div>
+      {% if record.upcoming %}
+        <div>Upcoming sessions - {{ record.upcoming }} hours.</div>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
